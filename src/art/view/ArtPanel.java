@@ -6,7 +6,7 @@ import java.util.Hashtable;
 import javax.swing.event.*;
 import art.controller.ArtController;
 
-public class ArtPanel
+public class ArtPanel extends JPanel
 {
 	private final int MINIMUM_EDGE = 5;
 	private final int MAXIMUM_EDGE = 20;
@@ -81,7 +81,21 @@ public class ArtPanel
 	}
 	public void setupPanel()
 	{
+		this.setLayout(appLayout);
+		this.setBackground(Color.LIGHT_GRAY);
+		this.setPreferredSize(new Dimension (1024, 768));
+		this.add(canvas);
 		
+		buttonPanel.setPreferredSize(new Dimension(200, 450));
+		buttonPanel.add(triangleButton);
+		buttonPanel.add(rectangleButton);
+		buttonPanel.add(ellipseButton);
+		buttonPanel.add(polygonButton);
+		buttonPanel.add(clearButton);
+		buttonPanel.add(saveButton);
+		buttonPanel.add(colorButton);
+		
+		sliderPanel.setPreferredSize(new Dimension(250, 450));
 	}
 	public void setupLayout()
 	{
