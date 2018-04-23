@@ -2,6 +2,7 @@ package art.view;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.awt.event.*;
 import javax.swing.*;
 import java.util.Hashtable;
 import javax.swing.event.*;
@@ -31,22 +32,24 @@ public class ArtPanel extends JPanel
 		this.app = app;
 		appLayout = new SpringLayout();
 		
-		currentScale = MINIMUM_SCALE;
-		currentEdgeCount = MINIMUM_EDGE;
-		scaleSlider = new JSlider(MINIMUM_SCALE, MAXIMUM_SCALE);
-		edgeSlider = new JSlider(MINIMUM_EDGE, MAXIMUM_EDGE);
+		currentScale 		= MINIMUM_SCALE;
+		currentEdgeCount 	= MINIMUM_EDGE;
+		
+		scaleSlider 	= new JSlider(MINIMUM_SCALE, MAXIMUM_SCALE);
+		edgeSlider 	= new JSlider(MINIMUM_EDGE, MAXIMUM_EDGE);
 		
 		canvas = new ShapeCanvas(app);
-		sliderPanel = new JPanel();
-		buttonPanel = new JPanel(new GridLayout(0,1));
 		
-		triangleButton = new JButton("add triangle");
-		rectangleButton = new JButton("add rectangle");
-		ellipseButton = new JButton("add ellipse");
-		polygonButton = new JButton("add polygon");
-		clearButton = new JButton("clear image");
-		saveButton = new JButton("save image");
-		colorButton = new JButton("change color");
+		sliderPanel 	= new JPanel();
+		buttonPanel 	= new JPanel(new GridLayout(0,1));
+		
+		triangleButton 	= new JButton("add triangle");
+		rectangleButton 	= new JButton("add rectangle");
+		ellipseButton 	= new JButton("add ellipse");
+		polygonButton 	= new JButton("add polygon");
+		clearButton 		= new JButton("clear image");
+		saveButton 		= new JButton("save image");
+		colorButton 		= new JButton("change color");
 		
 		setupSliders();
 		setupPanel();
@@ -109,7 +112,66 @@ public class ArtPanel extends JPanel
 	}
 	public void setupListeners()
 	{
+		rectangleButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+				Rectangle rectangle = createRectangle();
+				canvas.addShape(rectangle);
+			}
+		});
+		polygonButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+				Polygon polygon = createPolygon(currentEdgeCount);
+				canvas.addShape(polygon);
+			}
+		});
+		triangleButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+				Polygon triangle = createPolygon(3);
+				canvas.addShape(triangle);
+			}
+		});
+		ellipseButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent click)
+			{
+				Ellipse2D ellipse = createEllipse();
+				canvas.addShape(ellipse);
+			}
+		});
 		
+		clearButton.addActionListener(click -> canvas.clear());
+		saveButton.addActionListener(click -> canvas.save());
+		colorButton.addActionListener(click -> canvas.changeBackground());
+		
+		scaleSlider.addChangeListener(new ChangeListener()
+		{
+			@Override
+			public void stateChanged(ChangeEvent e)
+			{
+				if(!scaleSlider.getValueIsAdjusting())
+				{
+					currentScale = scaleSlider.getValue();
+				}
+			}
+		});
+		
+		edgeSlider.addChangeListener(new ChangeListener()
+		{
+			@Override
+			public void stateChanged(ChangeEvent e)
+			{
+				if(!edgeSlider.getValueIsAdjusting())
+				{
+					currentEdgeCount = edgeSlider.getValue();
+				}
+			}
+		});
 	}
 	
 	private boolean coinFlip()
@@ -175,4 +237,5 @@ public class ArtPanel extends JPanel
 		
 		return ellipse;
 	}
+	
 }
