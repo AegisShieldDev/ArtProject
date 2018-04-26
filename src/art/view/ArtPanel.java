@@ -26,6 +26,8 @@ public class ArtPanel extends JPanel
 	private int currentEdgeCount;
 	private int currentScale;
 	
+	
+	
 	public ArtPanel(ArtController app)
 	{
 		super();
@@ -39,9 +41,15 @@ public class ArtPanel extends JPanel
 		edgeSlider 	= new JSlider(MINIMUM_EDGE, MAXIMUM_EDGE);
 		
 		canvas = new ShapeCanvas(app);
+		appLayout.putConstraint(SpringLayout.NORTH, canvas, 50, SpringLayout.NORTH, this);
+		appLayout.putConstraint(SpringLayout.WEST, canvas, 50, SpringLayout.WEST, this);
 		
 		sliderPanel 	= new JPanel();
+		appLayout.putConstraint(SpringLayout.NORTH, sliderPanel, 0, SpringLayout.NORTH, canvas);
 		buttonPanel 	= new JPanel(new GridLayout(0,1));
+		appLayout.putConstraint(SpringLayout.WEST, sliderPanel, 20, SpringLayout.EAST, buttonPanel);
+		appLayout.putConstraint(SpringLayout.NORTH, buttonPanel, 0, SpringLayout.NORTH, canvas);
+		appLayout.putConstraint(SpringLayout.WEST, buttonPanel, 40, SpringLayout.EAST, canvas);
 		
 		triangleButton 	= new JButton("add triangle");
 		rectangleButton 	= new JButton("add rectangle");
@@ -161,6 +169,8 @@ public class ArtPanel extends JPanel
 			}
 		});
 		
+		
+		
 		edgeSlider.addChangeListener(new ChangeListener()
 		{
 			@Override
@@ -172,7 +182,47 @@ public class ArtPanel extends JPanel
 				}
 			}
 		});
+		
+		canvas.addMouseListener(new MouseListener()
+		{
+			public void mouseClicked(MouseEvent e)
+			{}
+			public void mousePressed(MouseEvent e)
+			{}
+			public void mouseReleased(MouseEvent e)
+			{
+				canvas.resetPoint();
+			}
+			public void mouseEntered(MouseEvent e)
+			{}
+			public void mouseExited(MouseEvent e)
+			{
+				canvas.resetPoint();	
+			}
+		});
+		
+		
+		canvas.addMouseMotionListener(new MouseMotionListener()
+		{		
+			public void mouseDragged(MouseEvent drag)
+			{
+				int x = drag.getX();
+				int y = drag.getY();
+				canvas.drawOnCanvas(x,y);
+			}
+				
+			public void mouseMoved(MouseEvent move)
+			{
+				int x = move.getX();
+				int y = move.getY();
+					
+					System.out.println("The X is at " + " and the Y is at " + y);
+			}
+				
+		});
+		
 	}
+	
 	
 	private boolean coinFlip()
 	{
